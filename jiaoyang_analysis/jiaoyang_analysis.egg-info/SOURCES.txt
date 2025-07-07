@@ -1,8 +1,0 @@
-pyproject.toml
-setup.py
-jiaoyang_analysis/__init__.py
-jiaoyang_analysis/config.py
-jiaoyang_analysis.egg-info/PKG-INFO
-jiaoyang_analysis.egg-info/SOURCES.txt
-jiaoyang_analysis.egg-info/dependency_links.txt
-jiaoyang_analysis.egg-info/top_level.txt
