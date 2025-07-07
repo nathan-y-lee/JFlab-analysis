@@ -1,4 +1,24 @@
 import numpy as np
+from skimage import filters, measure, morphology
+
+def detect_objects(img, roi, block_size, offset, min_size, area_threshold):
+    """
+    Detect objects in a 2D image using local thresholding and morphological operations.
+    """
+    local_thresh = filters.threshold_local(img, block_size=block_size, offset=offset)
+    binary = roi > local_thresh
+
+    # Remove small objects and holes
+    binary = morphology.remove_small_objects(binary, min_size=min_size)
+    binary = morphology.remove_small_holes(binary, area_threshold=area_threshold)
+
+    # Assign labels to connected components
+    labels = measure.label(binary)
+    props = measure.regionprops(labels)
+
+    print("Detected", len(props), "objects")
+
+    return binary, labels, props
 
 def crop_with_buffer(img, buffer):
     """
