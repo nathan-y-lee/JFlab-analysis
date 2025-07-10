@@ -1,10 +1,11 @@
 import numpy as np
-from skimage import filters, measure, morphology
 
 def detect_objects(img, roi, block_size, offset, min_size, area_threshold):
     """
     Detect objects in a 2D image using local thresholding and morphological operations.
     """
+    from skimage import filters, measure, morphology
+    
     local_thresh = filters.threshold_local(img, block_size=block_size, offset=offset)
     binary = roi > local_thresh
 
@@ -22,7 +23,7 @@ def detect_objects(img, roi, block_size, offset, min_size, area_threshold):
 
 def crop_with_buffer(img, buffer):
     """
-    Crop an 3D image (C, W, H) to the bounding box of non-zero pixels with a specified buffer.
+    Crop a 3D ROI (C, W, H) to the bounding box of non-zero pixels with a specified buffer.
     """
     y, x = np.nonzero(img[0, :, :])
     y_min = max(y.min() - buffer, 0)
