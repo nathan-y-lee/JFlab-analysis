@@ -1,10 +1,6 @@
 import tifffile
 
 def import_data(filepath, roi_prefix):
-    """
-    Import .tif img and ROI from the data_dir directory.
-    ROI must be named beginning with their roi_prefix (roi_dg_granule, roi_dg_all)
-    """
     img = tifffile.imread(f'{filepath}.tif')
     roi = tifffile.imread(f'{roi_prefix}{filepath}.tif')
 
