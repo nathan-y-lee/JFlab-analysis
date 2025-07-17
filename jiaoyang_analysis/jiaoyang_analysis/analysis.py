@@ -48,3 +48,35 @@ def analyze_image(filename, img, roi):
     }])
 
     return result
+
+def simple_analyze_image(filename, img, roi):
+    """
+    A simplified version of analyze_image identical to ImageJ
+    """
+    zproj = np.max(img, axis=0) # z-projection with maximum intensity
+    mask = roi > 0 # convert to binary mask
+    zproj_roi = np.where(mask, zproj, 0) # apply mask to image
+
+    mg = zproj_roi[0, :, :] # microglia channel (IBA1)
+    lys = zproj_roi[2, :, :] # lysosome channel (CB68)
+
+    threshold_mg = 60
+    threshold_lys = 104
+
+    mg_thresh = np.where(mg > threshold_mg, mg, 0)
+    lys_thresh = np.where(lys > threshold_lys, lys, 0)
+
+    overlap_mask = (mg_thresh > 0) & (lys_thresh > 0)
+    lys_overlap_thresh = lys_thresh[overlap_mask]
+
+    result = pd.DataFrame([{
+        'Image No.': filename,
+        'ROI Area (pixels)': np.count_nonzero(roi),
+        'Microglia Area': np.count_nonzero(mg_thresh),
+        'Lysosome Area': np.count_nonzero(lys_thresh),
+        'Microglia Intensity': np.sum(mg_thresh),
+        'Lysosome Intensity': np.sum(lys_thresh),
+        'Lysosome In Microglia Intensity': np.sum(lys_overlap_thresh),
+    }])
+
+    return result
